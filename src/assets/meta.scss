@@ -1,0 +1,38 @@
+/* 
+* @Author: 123456
+* @Date:   2018-07-09 17:08:11
+* @Last Modified by:   123456
+* @Last Modified time: 2018-07-19 10:28:32
+*/
+@media (min-width:400px) and (max-width:767px) {
+    .el-header {
+        padding:0;
+    }
+    .nsiLog{
+    	font-size: 16px;
+    }
+    .nsiLog span{
+    	margin:0 5px;
+    }
+}
+@media screen and (max-width: 400px) {
+	.headerLeft span{
+		padding:0 5px;
+	}
+    .el-header {
+        padding:0;
+    }
+    .nsiLog{
+    	padding:0 20px;
+    	font-size: 16px;
+    }
+    .nsiLog span{
+    	margin:0 5px;
+    }
+    .headerRight{
+    	font-size: 12px;
+    }
+    .asideWidth{
+    	width: 0;
+    }
+}
