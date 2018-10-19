@@ -16,6 +16,7 @@
             </el-form-item>
           </div>
         <el-button class="loginBtn" @click="userLogin" type="primary">登录</el-button>
+        <span size="mini" style="margin:10px 0 0 20px;font-size:14px;float:left;color:#999;cursor:pointer;" @click="forgetPas">忘记密码</span>
     </el-form>
   </div>
 </template>
@@ -43,6 +44,13 @@ export default {
       let that=this
       this.$refs.form.validate((valid) => {
         if(valid){
+          if(that.form.userName.indexOf('xinxueshuo.cn')<0){
+            that.$message({
+              message: '权限不足,请联系技术人员',
+              type: 'error'
+            });
+            return
+          }
           //生成token
           let timestamp=(new Date().getTime()).toString()
           //console.log(timestamp)
@@ -83,6 +91,10 @@ export default {
             });
           }
       })
+    },
+    forgetPas(){
+      window.open('http://data.xinxueshuo.cn/nsi/user/password.html','_blank')
+      //http://data.xinxueshuo.cn/nsi/user/password.html
     }
   },
   created(){

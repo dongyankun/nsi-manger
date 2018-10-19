@@ -61,7 +61,7 @@
       :modal-append-to-body="false"
       :visible.sync="puchaDrag"
       width="50%">
-      <el-form :model="nowCardDatas" :rules="rules" status-icon label-width="140px" class="updateCardForm">
+      <el-form ref="nowCardDatasFrom" :model="nowCardDatas" :rules="rules" status-icon label-width="140px" class="updateCardForm">
         <el-form-item prop="content01" required label="pc端图片地址">
           <el-input style="display:inline-block;float:left;" v-model="nowCardDatas.content01"  type="text"></el-input>
           <el-upload
@@ -115,7 +115,7 @@
         rightBottomCardDatas:[],//右侧下方bnaner
         nowCardDatas:{},//要修改的banner
         puchaDrag:false,//修改弹窗
-        uploadLoading:false,
+        uploadLoading:false,//上传加载动画
         mobileImgStatus:true,//控制是否有手机端图片
         fileData:{
           type:'nsi-official/article/'//上传图片参数
@@ -146,7 +146,20 @@
       },
       updateNowCardDatas(){
        //吊起修改活动，储存修改id
-        var that=this
+        let that=this
+        let flag=false
+        that.$refs.nowCardDatasFrom.validate((valid) => {
+          if(!valid){
+            that.$message({
+              message: '信息不全,禁止提交',
+              type: 'error'
+            });
+            flag=true
+          }
+        })
+        if(flag){
+          return
+        }
         let flagStr='?'
         for(let key in this.nowCardDatas){
           flagStr+=key+'='+this.nowCardDatas[key]+'&'
@@ -158,6 +171,7 @@
             message: response.data.msg,
             type: 'success'
           });
+          that.puchaDrag=false
         }).catch(function (response){
           that.$message({
             message: '请求活动列表失败',
@@ -182,8 +196,6 @@
           type: 'success'
         });
         this.nowCardDatas.content01=response.data.url
-        //this.uploadImgSrc=response.data.url
-        //this.uploadImgStatus=true
       },
       uploadSucess2(response, file, fileList){
         this.uploadLoading=false
@@ -192,8 +204,6 @@
           type: 'success'
         });
         this.nowCardDatas.content03=response.data.url
-        //this.uploadImgSrc=response.data.url
-        //this.uploadImgStatus=true
       },
       //文件上传失败
       uploadError(err, file, fileList){

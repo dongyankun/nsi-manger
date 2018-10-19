@@ -7,7 +7,7 @@
         <el-input v-model="form.title"></el-input>
       </el-form-item>
       <el-form-item label="资讯摘要：" prop="summary" required>
-          <el-input type="textarea" v-model="form.summary"></el-input>
+          <el-input :autosize="{ minRows: 4, maxRows: 8}" type="textarea" v-model="form.summary"></el-input><span style="position:absolute;left:410px;bottom:-10px;color:#999" >{{form.summary.length}}/55</span>
       </el-form-item>
       <el-form-item label="作者/编辑：" prop="articleWriter" required>
          <el-input v-model="form.articleWriter"></el-input>
@@ -19,7 +19,7 @@
               <input type="file" style="display:none" id="change" accept="image" @change="change">  
               <label for="change" class="imgInputLabel">更改图片</label>  
             </div> 
-            <p style="color:#999;text-align:left;text-indent:80px;margin-top:10px;font-size:14px;">注意:文件大小限制300kb,尺寸为750*400像素</p>   
+            <p style="color:#999;text-align:left;text-indent:80px;margin-top:10px;font-size:16px;">注意:文件大小限制<span style="color:#000;font-size:14px;">300kb</span>,尺寸为<span style="color:#000;font-size:14px;">750*400</span>像素最佳</p>   
         </div> 
         <div class="container" v-show="cropperStatus">  
             <div style="width: 800px;height: 500px;overflow:hidden;margin-left:100px;">  
@@ -64,7 +64,7 @@
       </el-form-item>
     </el-form>
 </div>
-  
+   
 </template>
 
 <script>
@@ -73,6 +73,15 @@
   import Cropper from "cropperjs"
   export default {
     data() {
+      var summary = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入资讯摘要'));
+        } else if(value.length>55){
+          callback(new Error('资讯摘要文本长度在55之下'));
+        }else{
+          callback();
+        }
+      };
       return {
         picValue: "",//input数据
         cropper: "",//图片裁剪对象
@@ -110,9 +119,7 @@
           title: [
             { required: true, message: '请输入资讯标题', trigger: 'blur' }
           ],
-          summary: [
-            { required: true, message: '请输入资讯摘要', trigger: 'blur' }
-          ],
+          summary: [{ validator: summary, trigger: 'blur' }],
           articleWriter: [
             { required: true, message: '请输入作者', trigger: 'blur' }
           ]
@@ -139,7 +146,7 @@
           return;
         }
         croppedCanvas = this.cropper.getCroppedCanvas({width:750,height:400});
-        this.uploadImgSrc = croppedCanvas.toDataURL("image/jpeg",1);
+        this.uploadImgSrc = croppedCanvas.toDataURL("image/jpeg",.5);
         this.uploadImgSrc=this.uploadImgSrc.slice(23,)
         //上传图片
         this.postImg();
@@ -179,25 +186,46 @@
           });
           return false;
         }
-        if (size > 307200) {
+        if (size > 307200||size < 51200) {
           that.$message({
-              message: '请选择300kb以内的图片！',
+              message: '请选择50kb-300kb大小的图片！',
               type: 'error'
           });
           return false;
         }
-        this.cropperStatus=true
         this.picValue = files[0];
         this.cropperImgUrl = this.getObjectURL(this.picValue);
-        //每次替换图片要重新得到新的url
-        if (this.cropper) {
-          this.cropper.replace(this.cropperImgUrl);
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+        reader.onload=function(){
+          let imgUrlBase64=this.result
+          var image = new Image();
+          image.src= imgUrlBase64;
+          image.onload=function(){
+               let width=image.width
+               let height=image.height
+               if(width==750&&height==400){
+                  that.postImg(imgUrlBase64.slice(23,))
+                  that.uploadLoading=true
+               }else{
+                  that.$message({
+                      message: '图片必须为750*400像素',
+                      type: 'error'
+                  });
+                  // that.cropperStatus=true
+                  // //每次替换图片要重新得到新的url
+                  // if (that.cropper) {
+                  //   that.cropper.replace(that.cropperImgUrl);
+                  // }
+                  // that.cropperStatus = true;
+               }
+          };
         }
-        this.cropperStatus = true;
       },
       //提交上传函数
-      postImg() {
+      postImg(imgurl) {
         var that=this
+        if(imgurl){this.uploadImgSrc=imgurl}
         var formData =new URLSearchParams();
         formData.append('strImage', this.uploadImgSrc);
         formData.append("type", 'nsi-official/article/');
@@ -221,9 +249,9 @@
       //立即创建
       createNewsFun(){
         var that=this
-        that.setLoader()
         this.$refs.createNewsform.validate((valid) => {
           if(valid&&that.articleContent!=''&&that.uploadImgSrc!='') {
+            that.setLoader()
             let url=that.baseUrl+'/manager/article/add.do'
             let addNews=new URLSearchParams();
             let successMessage='新建资讯成功'
@@ -319,13 +347,11 @@
         minContainerHeight:450,
         minCanvasWidth:800,
         minCanvasHeight:400,
-        minCropBoxWidth:750,
-        minCropBoxHeight:400,
         viewMode: 0,
         background: true,
         scalable:true,
         zoomable: true,
-        cropBoxResizable:false,
+        cropBoxResizable:true,
         ready: function() {
           that.croppable = true;
         }
@@ -378,6 +404,16 @@
       }
       editor.customConfig.uploadFileName = 'file'
       editor.customConfig.uploadImgTimeout = 10000
+      editor.customConfig.pasteTextHandle = function (content) {
+          if(content.indexOf('"=""')>=0){
+            that.$message({
+              message: '文章有不规范字符,请粘贴纯文本',
+              type: 'error'
+            });
+          }
+          return content.replace(/<img src="http:\/\//g,'<img src="https://')
+
+      }
       editor.create()
       //请求默认信息填充
       let websiteNewsId=that.$store.state.websiteNewsId
@@ -425,6 +461,7 @@
           that.form.visible=false
         }
         that.loading.close();
+        
       }).catch(function (response){
         that.loading.close();
         that.$message({

@@ -2,7 +2,7 @@
 * @Author: 123456
 * @Date:   2018-07-09 17:08:11
 * @Last Modified by:   123456
-* @Last Modified time: 2018-07-27 15:00:39
+* @Last Modified time: 2018-08-08 10:30:30
 */
 *{
 	margin: 0;
@@ -33,6 +33,9 @@
 		align-items:center;
 		justify-content:flex-end;
 	}
+}
+.el-message{
+	z-index:100000 !important;
 }
 .nsiLog{
 	text-align: left;

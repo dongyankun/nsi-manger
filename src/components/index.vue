@@ -10,6 +10,7 @@
           <span class="nsiMenuBtn" @click="isCollapse">☰</span>   
         </el-col>
         <el-col :span="12" class="headerRight">
+          <span @click="goWebsite">官网首页</span>
           <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80">
           <span>{{userName}}</span>
           <span @click="outLogin">
@@ -42,8 +43,8 @@
             </template>
             <el-menu-item-group>
               <template slot="title">官网首页</template>
-              <el-menu-item index="/website/index">资讯动态</el-menu-item>
-              <el-menu-item index="/website/activity">官网活动配置</el-menu-item>
+              <el-menu-item index="/website/index">资讯中心</el-menu-item>
+              <el-menu-item index="/website/activity">近期活动</el-menu-item>
               <el-menu-item index="/website/banner">官网首页banner</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
@@ -54,11 +55,27 @@
               <template slot="title">广告位</template>
               <el-menu-item index="/website/advert">广告位配置</el-menu-item>
             </el-menu-item-group>
+            <el-menu-item-group>
+              <template slot="title">研究院</template>
+              <el-menu-item index="/website/datum">资料管理</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+              <template slot="title">会员</template>
+              <el-menu-item index="/website/member">会员管理</el-menu-item>
+            </el-menu-item-group>
           </el-submenu>
-          <el-menu-item style="text-align:left;" index="/distribution/index">
-            <i class="el-icon-goods"></i>
-            <span slot="title">分销管理</span>
-          </el-menu-item>
+          <el-submenu style="text-align:left;" index="/distribution">
+            <template slot="title">
+              <i class="el-icon-printer"></i>
+              <span>支付管理</span>
+            </template>
+            <el-menu-item-group>
+            
+              <el-menu-item index="/distribution/index">分销管理</el-menu-item>
+              <el-menu-item index="/distribution/bill">财务管理</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          
         </el-menu>
       </el-aside>
       <!-- 路由页面 -->
@@ -83,6 +100,9 @@ export default {
     }
   },
   methods:{
+    goWebsite(){
+      window.open('https://www.xinxueshuo.cn/#/news/latest','_blank')
+    },
     outLogin(){
       localStorage["userName"]=''
       this.$router.push({path:'/login'});

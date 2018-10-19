@@ -1,5 +1,6 @@
 <template>
-  <div style="min-width:950px;">
+  <div style="min-width:950px;" v-loading.fullscreen="uploadLoading" element-loading-text="图片上传中" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">
     <!-- 活动列表 -->
     <el-row>
       <el-col :span="24" v-for="(data, index) in cardDatas" :key="data.id" >
@@ -32,7 +33,7 @@
       :modal-append-to-body="false"
       :visible.sync="puchaDrag"
       width="50%">
-      <el-form :model="nowCardDatas" :rules="rules" status-icon label-width="100px" class="updateCardForm">
+      <el-form ref="nowCardDatasFrom" :model="nowCardDatas" :rules="rules" status-icon label-width="100px" class="updateCardForm">
         <el-form-item prop="content01" required label="中文标题">
           <el-input v-model="nowCardDatas.content01"  type="text"></el-input>
         </el-form-item>
@@ -47,6 +48,9 @@
         </el-form-item>
         <el-form-item prop="content06" required label="活动序号">
           <el-input v-model="nowCardDatas.content06" type="text"></el-input>
+        </el-form-item>
+        <el-form-item prop="content07" required label="跳转链接">
+          <el-input v-model="nowCardDatas.content07" type="text"></el-input>
         </el-form-item>
         <el-form-item label="图片地址">
           <el-input class="beforeUploadImg" v-model="nowCardDatas.content05" type="text"></el-input>
@@ -64,7 +68,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item prop="textcontent01" required label="活动内容">
-          <el-input  v-model="nowCardDatas.textcontent01" type="textarea"></el-input>
+          <el-input :autosize="{ minRows: 5, maxRows: 8}"  v-model="nowCardDatas.textcontent01" type="textarea"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -83,6 +87,7 @@
         cardDatasId:0,//活动id
         puchaDrag:false,//修改活动状态
         nowCardDatas:{},//要修改的活动
+        uploadLoading:false,//上传加载动画
         fileData:{
           type:'nsi-official/article/'//上传图片参数
         },
@@ -112,8 +117,21 @@
     methods:{
       //修改活动
       updateNowCardDatas(){
-
-        var that=this
+        let that=this
+        let flag=false
+        that.$refs.nowCardDatasFrom.validate((valid) => {
+          if(!valid){
+            that.$message({
+              message: '信息不全,禁止提交',
+              type: 'error'
+            });
+            flag=true
+          }
+        })
+        if(flag){
+          return
+        }
+        that.puchaDrag=false
         let flagStr='?'
         for(let key in this.nowCardDatas){
           flagStr+=key+'='+this.nowCardDatas[key]+'&'
@@ -134,6 +152,7 @@
       },
       //吊起修改活动，储存修改id
       updateCardData(id){
+        
         this.cardDatasId=id
         this.puchaDrag=true
         for (var i = 0; i < this.cardDatas.length; i++) {
@@ -149,7 +168,7 @@
           message: '图片上传成功',
           type: 'success'
         });
-        this.uploadImgSrc=response.data.url
+        this.nowCardDatas.content05=response.data.url
         this.uploadImgStatus=true
       },
       //文件上传失败

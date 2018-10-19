@@ -3,11 +3,11 @@
   <!-- 头部按钮 -->
   <div class="headerBtn">
     <div class="headerBtnLeft">
-      <el-button @click="createNews" type="primary">添加资讯</el-button>
+      <el-button  type="primary">添加资讯</el-button>
     </div>
     <div class="headerBtnRight">
       <el-input v-model="keyword" placeholder="请输入关键字搜索"></el-input>
-      <el-button type="success" class="selectBtn" @click="getWebsiteTable"><i class="el-icon-search"></i><span>查询</span></el-button>
+      <el-button type="success" class="selectBtn" ><i class="el-icon-search"></i><span>查询</span></el-button>
     </div>
     
   </div>
@@ -22,37 +22,41 @@
       prop="id"
       align="center"
       label="编号"
-      width="100">
-    </el-table-column>
-    <el-table-column
-      prop="title"
-      align="center"
-      label="标题"
       >
     </el-table-column>
     <el-table-column
-      prop="articleWriter"
-      label="作者"
+      prop="name"
       align="center"
-      width="120">
+      label="联系人"
+      >
+    </el-table-column>
+    <el-table-column
+      prop="institution"
+      label="单位"
+      align="center"
+      >
     </el-table-column>
     
     <el-table-column
-      prop="updateTime"
+      prop="duty"
       align="center"
-      label="最后更新日期">
+      label="职位">
     </el-table-column>
     <el-table-column
-      label="文章链接"
+      prop="phone"
+      label="联系电话"
       align="center"
-      width="200">
-      <template slot-scope="scope">
-        <el-button v-clipboard:copy="scope.row.articleUrl" v-clipboard:error="copyError" v-clipboard:success="copysucess" type="text" size="small">复制文章链接</el-button>
-      </template>
+      >
+    </el-table-column>
+     <el-table-column
+      prop="mail"
+      label="邮箱"
+      align="center"
+      >
     </el-table-column>
     <el-table-column
-      prop="articleReader"
-      label="浏览量"
+      prop="memberType"
+      label="会员类型"
       align="center"
       width="120">
     </el-table-column>
@@ -62,8 +66,8 @@
       align="center"
       width="100">
       <template slot-scope="scope">
-        <el-button @click.prevent="edit(scope.row.id)" type="text" size="small">编辑</el-button>
-        <el-button @click.prevent="deleteWebsiteTableData(scope.row.id,websiteTableData)" type="text" size="small" style="color:#f56c6c">删除</el-button>
+        <el-button @click.prevent="edit(scope.row.id)" type="text" size="small">{{scope.row.states==0?'未联系':'已联系'}}</el-button>
+        <!-- <el-button @click.prevent="deleteWebsiteTableData(scope.row.id,websiteTableData)" type="text" size="small" style="color:#f56c6c">删除</el-button> -->
       </template>
     </el-table-column>
   </el-table>
@@ -100,30 +104,13 @@
       getWebsiteTable(){
         var that=this
         that.websiteTableDataloading=true
-        let url=this.baseUrl + "/manager/article/list.do"+"?pageNum="+this.pageNum+"&pageSize="+this.pageSize+"&keyword="+this.keyword
+        let url=this.baseUrl + "/members/get_members_list.do"+"?pageNum="+this.pageNum+"&pageSize="+this.pageSize+"&keyword="+this.keyword
         this.$axios.get(url).then(function(response){
           that.pageTotalnum=response.data.data.total
           that.websiteTableData=response.data.data.list
           //console.log(that.websiteTableData)
           let websiteTableDataLength=that.websiteTableData.length
           let flagNum=0
-          function RefreshStatistics(){
-              let url=that.baseUrl + "/manager/article/RefreshStatistics.do"+"?articleId="+that.websiteTableData[flagNum].id
-              that.$axios.get(url).then(function(response){
-                that.websiteTableData[flagNum].articleReader=response.data.msg
-                flagNum++
-                if(flagNum<websiteTableDataLength){
-                  RefreshStatistics()
-                }
-              }).catch(function (response){
-                that.websiteTableDataloading=false
-                that.$message({
-                  message: '请求浏览量数据失败',
-                  type: 'error'
-                });
-              });
-          }
-          RefreshStatistics()
           that.websiteTableDataloading=false
         }).catch(function (response){
           that.websiteTableDataloading=false
@@ -145,8 +132,39 @@
       },
       //编辑资讯
       edit(newsId){
-        this.$store.state.websiteNewsId=newsId
-        this.$router.push({path:'/website/createnews'});
+        var that=this
+        that.$confirm('确定已联系该会员?', '提示', {
+          cancelButtonText: '取消',
+          confirmButtonText: '确定',
+          type: 'warning'
+        }).then(() => {
+          
+          let url=that.baseUrl + "/members/set_members_states.do"
+          var formData =new URLSearchParams();
+          formData.append('states', 1)
+          formData.append('id', newsId)
+          
+          that.$axios.post(url,formData).then(function(response){
+            
+            that.$message({
+              message: response.data.msg,
+              type: 'sucess'
+            });
+            that.getWebsiteTable()
+          }).catch(function (response){
+            that.$message({
+              message: '数据请求失败',
+              type: 'error'
+            });
+          });
+        }).catch(() => {
+          that.$message({
+            type: 'info',
+            message: '已取消修改'
+          });          
+        });
+        // this.$store.state.websiteNewsId=newsId
+        // this.$router.push({path:'/website/createnews'});
       },
       //删除资讯
       deleteWebsiteTableData(articleId){
