@@ -25,6 +25,12 @@
       >
     </el-table-column>
     <el-table-column
+      prop="createTime"
+      align="center"
+      label="创建时间"
+      >
+    </el-table-column>
+    <el-table-column
       prop="name"
       align="center"
       label="联系人"
@@ -108,6 +114,21 @@
         this.$axios.get(url).then(function(response){
           that.pageTotalnum=response.data.data.total
           that.websiteTableData=response.data.data.list
+          function add0(data){
+            return data>9?data:'0'+data
+          }
+          for (var i = 0; i < that.websiteTableData.length; i++) {
+              var time = new Date(that.websiteTableData[i].createTime);
+              var y = time.getFullYear();
+              var m = time.getMonth()+1;
+              var d = time.getDate();
+              var h = time.getHours();
+              var mm = time.getMinutes();
+              var s = time.getSeconds();
+              //var riqi=y+'-'+m+'-'+d+' '+h+':'+mm+':'+s;
+              var riqi= y+'-'+add0(m)+'-'+add0(d)+' '+add0(h)+':'+add0(mm)+':'+add0(s);
+              that.websiteTableData[i].createTime=riqi
+          };
           //console.log(that.websiteTableData)
           let websiteTableDataLength=that.websiteTableData.length
           let flagNum=0

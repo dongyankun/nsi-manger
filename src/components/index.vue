@@ -101,7 +101,7 @@ export default {
   },
   methods:{
     goWebsite(){
-      window.open('https://www.xinxueshuo.cn/#/news/latest','_blank')
+      window.open('https://www.xinxueshuo.cn/#/latest','_blank')
     },
     outLogin(){
       localStorage["userName"]=''
