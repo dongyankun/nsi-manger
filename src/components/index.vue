@@ -63,6 +63,10 @@
               <template slot="title">会员</template>
               <el-menu-item index="/website/member">会员管理</el-menu-item>
             </el-menu-item-group>
+            <el-menu-item-group>
+              <template slot="title">vis活动</template>
+              <el-menu-item index="/website/visAct">活动管理</el-menu-item>
+            </el-menu-item-group>
           </el-submenu>
           <el-submenu style="text-align:left;" index="/distribution">
             <template slot="title">

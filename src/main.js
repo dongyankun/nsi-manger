@@ -22,7 +22,7 @@ var flagNum=Math.random()
 // if(flagNum>0.5){
 // 	Vue.prototype.baseUrl = 'http://192.168.0.159:8080/nsi-1.0'
 // }else{
-	//Vue.prototype.baseUrl = 'http://192.168.0.49:8080/nsi-1.0'
+	//Vue.prototype.baseUrl = 'http://192.168.0.54:8080/nsi-1.0'
 	Vue.prototype.baseUrl = 'https://data.xinxueshuo.cn/nsi-1.0'
 //}
 Vue.config.productionTip = false

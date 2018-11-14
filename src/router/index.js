@@ -13,6 +13,7 @@ import advert from '@/components/website/advert'
 import eventActivity from '@/components/website/eventActivity'
 import datum from '@/components/website/datum'
 import member from '@/components/website/member'
+import visAct from '@/components/website/visAct'
 Vue.use(Router)
 
 export default new Router({
@@ -67,7 +68,10 @@ export default new Router({
 	　　  },{
 	　　　　path: '/distribution/index', 
 	 　　　 component: distributionIndex,
-	　　  }
+	　　  },{
+			path: '/website/visAct', 
+	 　　　 component: visAct,
+		  }
 	　]
     },{
     	path: '/login',
