@@ -44,7 +44,7 @@ export default {
       let that=this
       this.$refs.form.validate((valid) => {
         if(valid){
-          if(that.form.userName.indexOf('xinxueshuo.cn')<0){
+          if((that.form.userName.indexOf('xinxueshuo.cn')<0)||(that.form.userName.length<18)){
             that.$message({
               message: '权限不足,请联系技术人员',
               type: 'error'

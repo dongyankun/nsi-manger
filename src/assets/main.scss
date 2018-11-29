@@ -1,8 +1,8 @@
 /* 
 * @Author: 123456
 * @Date:   2018-07-09 17:08:11
-* @Last Modified by:   123456
-* @Last Modified time: 2018-08-08 10:30:30
+* @Last Modified by:   dongyankun
+* @Last Modified time: 2018-11-15 16:26:02
 */
 *{
 	margin: 0;
@@ -171,8 +171,9 @@ z-index:100000!important;
 }
 /* banner */
 .bannerTitle{
-	margin:10px 0px 10px 10px;
-	text-align: left;
+	margin:20px 0px 30px 10px;
+	text-align: center;
+	font-size:22px;
 }
 .distributionTable,.websiteTable,.headerBtn{
 	width: 100%;

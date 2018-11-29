@@ -7,6 +7,7 @@
       stripe
       v-loading="distributionTableDataloading"
       class="distributionTable"
+      
       >
       <el-table-column
         type='index'

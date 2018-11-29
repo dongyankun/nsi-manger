@@ -7,6 +7,7 @@
       stripe
       v-loading="distributionTableDataloading"
       class="distributionTable"
+      :default-sort = "{prop: 'total_fee', order: 'descending'}"
       >
       <el-table-column
         type='index'
@@ -36,6 +37,10 @@
         prop="total_fee"
         align="center"
         label="金额"
+        sortable
+        class-name="highLight"
+        :filters="[{text: '>1元', value: '1'}]"
+        :filter-method="filterHandler"
         width="100">
       </el-table-column>
       <el-table-column
@@ -72,7 +77,7 @@
       @size-change="handleSizeChange"
       background
       layout="total, sizes, prev, pager, next, jumper"
-      :page-sizes="[10,20,30,40,50]"
+      :page-sizes="[10,20,30,40,50,100]"
       :page-size="30"
       :total="pageTotalnum">
     </el-pagination>
@@ -103,6 +108,10 @@ export default {
       handleSizeChange(num){ 
         this.pageSize=num
         this.getDistributionTableData()
+      },
+      filterHandler(value, row, column){
+        const property = column['property'];
+        return row[property] > value;
       },
     //获取表格数据
     getDistributionTableData(){
@@ -154,5 +163,8 @@ export default {
 }
 </script>
 <style lang="scss">
-  
+  .highLight{
+    color:#F00;
+    font-size:18px;
+  }
 </style>
