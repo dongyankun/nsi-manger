@@ -60,7 +60,7 @@
       <div ref="editor" style="text-align:left;"></div>
       <el-form-item>
         <el-button @click="createNewsFun" class="createNews" type="primary">{{updateOrAdd}}</el-button>
-        <el-button @click="backRouter" class="createNews" type="primary">返回</el-button>
+        <el-button @click="backRouter" class="createNews comebackHome" type="primary">返回</el-button>
       </el-form-item>
     </el-form>
 </div>
@@ -272,7 +272,7 @@
             addNews.append('summary',that.form.summary);
             addNews.append('articleWriter',that.form.articleWriter);
             addNews.append('siftType',that.form.siftType);
-            addNews.append('visible',flagvisible);
+            addNews.append('visible',1);
             addNews.append('articleContent',that.articleContent);
             addNews.append('coverImage',that.uploadImgSrc);
             addNews.append('articleCat',that.form.articleCat);
@@ -302,6 +302,45 @@
           }
         });
       },
+      //保存模板
+      createNewstemplate(){
+        var that=this
+            let url=that.baseUrl+'/manager/article/add.do'
+            let addNews=new URLSearchParams();
+            let successMessage='新建资讯成功'
+            let errorMessage='修改资讯失败'
+            if(that.websiteNewsId==''){
+              url=that.baseUrl+'/manager/article/add.do'
+              successMessage='新建资讯成功'
+              errorMessage='修改资讯失败'
+            }else{
+              url=that.baseUrl+'/manager/article/update.do'
+              addNews.append('id',that.websiteNewsId);
+              successMessage='修改资讯成功'
+              errorMessage='修改资讯失败'
+            }
+            let flagvisible=0
+            if(that.form.visible){flagvisible=1}
+            addNews.append('title',that.form.title);
+            addNews.append('summary',that.form.summary);
+            addNews.append('articleWriter',that.form.articleWriter);
+            addNews.append('siftType',that.form.siftType);
+            addNews.append('visible',0);
+            addNews.append('articleContent',that.articleContent);
+            addNews.append('coverImage',that.uploadImgSrc);
+            addNews.append('articleCat',that.form.articleCat);
+            addNews.append('articleSourceTitle',that.form.articleSourceTitle);
+            let flagarticleSourceAdress=that.form.articleSourceAdress
+            if(flagarticleSourceAdress.startsWith('www.')){
+              flagarticleSourceAdress="http://"+flagarticleSourceAdress
+            }
+            addNews.append('articleSourceAdress',flagarticleSourceAdress);
+            that.$axios.post(url,addNews).then(resp => {
+                
+            }).catch(err=>{
+                that.loading.close()
+            })
+      },
       //改变模版类型
       siftTypeChange(type){
         if(type=='新闻类文章'){
@@ -329,6 +368,7 @@
           this.form.articleSourceAdress='http://xinxueshuo.cn/'
         }
       },
+      
       //返回上一级
       backRouter(){
         this.$router.push({path:'/website/index'});
@@ -360,6 +400,31 @@
       var editor = new E(this.$refs.editor)
       editor.customConfig.onchange = (html) => {
         this.articleContent = html
+        clearInterval(flagTime)
+        //每隔1min提交一次
+        var flagTime=setInterval(function(){
+          //if(that.articleContent!=''){
+              let flagurl=that.baseUrl+'/manager/article/check_title.do'
+              let addNews=new URLSearchParams();
+              addNews.append('title',that.form.title);
+              that.$axios.post(flagurl,addNews).then(resp => {
+                  if(resp.data.code==1){
+                    that.websiteNewsId=resp.data.data.id
+                  }
+                  that.createNewstemplate()
+              }).catch(err=>{
+                  //that.loading.close()
+              })
+            //that.createNewstemplate()
+          // }else{
+          //   console.log(that.articleContent)
+          //   console.log(that.form)
+          //   //console.log('无文章，不提交')
+          // }
+        },20000)
+        that.$once('hook:beforeDestroy', () => {            
+            clearInterval(flagTime);                                    
+        })
       }
       editor.customConfig.uploadImgServer = that.baseUrl+'/manager/talent/upload.do'
       editor.customConfig.uploadImgParams = {
@@ -455,11 +520,12 @@
         editor.cmd.do('insertHTML', that.articleContent)
         that.uploadImgSrc=response.data.data.coverImage
         that.uploadImgStatus=true
-        if(response.data.data.visible==1){
+        //进来默认是公开
+        //if(response.data.data.visible==1){
           that.form.visible=true
-        }else{
-          that.form.visible=false
-        }
+        // }else{
+        //   that.form.visible=false
+        // }
         that.loading.close();
         
       }).catch(function (response){
@@ -784,5 +850,8 @@ img{
 .cropper-disabled .cropper-line,
 .cropper-disabled .cropper-point {
   cursor: not-allowed;
+}
+.comebackHome{
+  float: left;
 }
 </style>

@@ -5,7 +5,7 @@
       <el-row>
         <el-col :span="12" class="headerLeft">
           <div class="nsiLog">
-            NSI ADMIN
+            NSI WEBSITE
           </div>
           <span class="nsiMenuBtn" @click="isCollapse">☰</span>   
         </el-col>

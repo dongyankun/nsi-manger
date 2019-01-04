@@ -29,6 +29,9 @@
       align="center"
       label="标题"
       >
+      <template slot-scope="scope">
+          <p :class="scope.row.visible==0?warnClass:commonCalss">{{ scope.row.visible==0?scope.row.title+'(草稿)':scope.row.title }}</p>
+      </template>
     </el-table-column>
     <el-table-column
       prop="articleWriter"
@@ -93,6 +96,8 @@
         typeIndex:1,//序号开始
         keyword:'',//搜索
         websiteTableDataloading:true,//表格数据展示
+        warnClass:'warnClass',
+        commonCalss:''
       }
     },
     methods:{
@@ -206,5 +211,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
+  .warnClass{
+    color:#F00;
+  }
 </style>

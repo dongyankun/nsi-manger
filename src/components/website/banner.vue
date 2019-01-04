@@ -74,7 +74,7 @@
             :before-upload="beforeUpload"
             :on-error="uploadError"
             :file-list="fileList">
-            <el-button size="small" type="primary">上传图片</el-button><span style="color:#999;font-size:12px;padding-left:12px;">图片大小:878*340像素</span>
+            <el-button size="small" type="primary">上传图片</el-button><span style="color:#999;font-size:12px;padding-left:12px;">图片大小:{{imgSize}}像素</span>
           </el-upload>
         </el-form-item>
         <el-form-item v-show="mobileImgStatus" prop="content03" required label="手机端图片地址">
@@ -89,7 +89,7 @@
             :before-upload="beforeUpload"
             :on-error="uploadError"
             :file-list="fileList">
-            <el-button size="small" type="primary">上传图片</el-button><span style="color:#999;font-size:12px;padding-left:12px;">图片大小:400*170像素</span>
+            <el-button size="small" type="primary">上传图片</el-button><span style="color:#999;font-size:12px;padding-left:12px;">图片大小:664*304像素</span>
           </el-upload>
         </el-form-item>
         <el-form-item prop="content02" required label="跳转链接">
@@ -120,6 +120,7 @@
         fileData:{
           type:'nsi-official/article/'//上传图片参数
         },
+        imgSize:'860*358',
         fileList:[],//上传图片列表
         rules: {
           content01: [
@@ -181,7 +182,13 @@
       },
       updateCardData(id,mobileImgStatus){
         this.puchaDrag=true
-        mobileImgStatus==0?this.mobileImgStatus=false:this.mobileImgStatus=true
+        if(mobileImgStatus==0){
+          this.mobileImgStatus=false
+          this.imgSize='289*175'
+        }else{
+          this.mobileImgStatus=true
+          this.imgSize='860*358'
+        }
         for (var i = 0; i < this.cardDatas.length; i++) {
           if(id==this.cardDatas[i].id){
             this.nowCardDatas=this.cardDatas[i]

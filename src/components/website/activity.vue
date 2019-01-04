@@ -64,7 +64,7 @@
             :before-upload="beforeUpload"
             :on-error="uploadError"
             :file-list="fileList">
-            <el-button size="small" type="primary">上传图片</el-button>
+            <el-button size="small" type="primary">上传图片</el-button><span style="color:#999;font-size:12px;padding-left:12px;">图片大小:250*250像素</span>
           </el-upload>
         </el-form-item>
         <el-form-item prop="textcontent01" required label="活动内容">
