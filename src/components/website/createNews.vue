@@ -336,8 +336,12 @@
             }
             addNews.append('articleSourceAdress',flagarticleSourceAdress);
             that.$axios.post(url,addNews).then(resp => {
-                
+                that.$message({
+                  message: '文章已经自动保存为草稿',
+                  type: 'success'
+                });
             }).catch(err=>{
+                that.$message.error('自动保存为草稿失败，请注意及时保存');
                 that.loading.close()
             })
       },
@@ -400,31 +404,6 @@
       var editor = new E(this.$refs.editor)
       editor.customConfig.onchange = (html) => {
         this.articleContent = html
-        clearInterval(flagTime)
-        //每隔1min提交一次
-        var flagTime=setInterval(function(){
-          //if(that.articleContent!=''){
-              let flagurl=that.baseUrl+'/manager/article/check_title.do'
-              let addNews=new URLSearchParams();
-              addNews.append('title',that.form.title);
-              that.$axios.post(flagurl,addNews).then(resp => {
-                  if(resp.data.code==1){
-                    that.websiteNewsId=resp.data.data.id
-                  }
-                  that.createNewstemplate()
-              }).catch(err=>{
-                  //that.loading.close()
-              })
-            //that.createNewstemplate()
-          // }else{
-          //   console.log(that.articleContent)
-          //   console.log(that.form)
-          //   //console.log('无文章，不提交')
-          // }
-        },20000)
-        that.$once('hook:beforeDestroy', () => {            
-            clearInterval(flagTime);                                    
-        })
       }
       editor.customConfig.uploadImgServer = that.baseUrl+'/manager/talent/upload.do'
       editor.customConfig.uploadImgParams = {
@@ -535,6 +514,29 @@
           type: 'error'
         });
       });
+    },
+    watch:{
+      articleContent(){
+        var that=this
+        clearInterval(this._inter)
+        //每隔1min提交一次
+        this._inter=setInterval(function(){
+            let flagurl=that.baseUrl+'/manager/article/check_title.do'
+            let addNews=new URLSearchParams();
+            addNews.append('title',that.form.title);
+            that.$axios.post(flagurl,addNews).then(resp => {
+                if(resp.data.code==1){
+                  that.websiteNewsId=resp.data.data.id
+                }
+                that.createNewstemplate()
+            }).catch(err=>{
+                
+            })
+        },30000)
+        that.$once('hook:beforeDestroy', () => {            
+            clearInterval(that._inter);                                    
+        })
+      }
     }
   }
 </script>
