@@ -7,7 +7,6 @@
       stripe
       v-loading="distributionTableDataloading"
       class="distributionTable"
-      :default-sort = "{prop: 'total_fee', order: 'descending'}"
       >
       <el-table-column
         type='index'

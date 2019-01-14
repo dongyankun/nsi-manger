@@ -68,6 +68,16 @@
               <el-menu-item index="/website/visAct">活动管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
+          <el-submenu style="text-align:left;" index="/mall">
+            <template slot="title">
+              <i class="el-icon-printer"></i>
+              <span>商城</span>
+            </template>
+            <el-menu-item-group>
+            
+              <el-menu-item index="/mall/goods">商品管理</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
           <el-submenu style="text-align:left;" index="/distribution">
             <template slot="title">
               <i class="el-icon-printer"></i>

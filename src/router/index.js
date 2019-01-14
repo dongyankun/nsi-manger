@@ -14,6 +14,8 @@ import eventActivity from '@/components/website/eventActivity'
 import datum from '@/components/website/datum'
 import member from '@/components/website/member'
 import visAct from '@/components/website/visAct'
+import goods from '@/components/mall/goods'
+import createGoods from '@/components/mall/createGoods.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -71,6 +73,12 @@ export default new Router({
 	　　  },{
 			path: '/website/visAct', 
 	 　　　 component: visAct,
+		  },{
+			path: '/mall/goods', 
+	 　　　 component: goods,
+		  },{
+			path: '/mall/creategoods/:id', 
+	 　　　 component: createGoods,
 		  }
 	　]
     },{
