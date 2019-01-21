@@ -40,7 +40,9 @@
             </el-date-picker>
         </el-form-item>
          <el-form-item label="商品类型：" prop="goodsType" required>
-         <el-input v-model="form.goodsType"></el-input>
+           <el-radio-group v-model="form.goodsType" size="medium">
+            <el-radio border label="新学说书籍"></el-radio>
+          </el-radio-group>
         </el-form-item>
          <el-form-item label="库存：" prop="goodsStock" required>
              <el-input-number v-model="form.goodsStock" :min="1" :max="9999" label="描述文字"></el-input-number>
@@ -55,10 +57,10 @@
          <el-input v-model="form.goodsSeries"></el-input>
         </el-form-item>
         <el-form-item label="状态：">
-        <el-radio-group v-model="form.goodsState" size="medium">
+          <el-radio-group v-model="form.goodsState" size="medium">
             <el-radio border @change="siftTypeChange" label="上架"></el-radio>
             <el-radio border @change="siftTypeChange" label="下架"></el-radio>
-            </el-radio-group>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="销量：" prop="goodsSales" required>
             <el-input v-model="form.goodsSales" label="描述文字"></el-input>
@@ -100,7 +102,7 @@
           goodsAuthor: '',
           goodsPress: '',
           goodsPubdate:'',
-          goodsType: '',
+          goodsType: '新学说书籍',
           goodsStock:'',
           goodsLevel:'',
           goodsLabel:'',

@@ -80,6 +80,7 @@
   export default {
     data() {
       return {
+        
         cardDatas:{},//活动列表
         cardDatasId:0,//活动id
         puchaDrag:false,//修改活动状态
