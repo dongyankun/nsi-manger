@@ -74,8 +74,9 @@
               <span>商城</span>
             </template>
             <el-menu-item-group>
-            
+              <el-menu-item index="/mall/advert">商城首页</el-menu-item>
               <el-menu-item index="/mall/goods">商品管理</el-menu-item>
+              <el-menu-item index="/mall/bill">订单管理</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu style="text-align:left;" index="/distribution">

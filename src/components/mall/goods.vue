@@ -29,6 +29,7 @@
       prop="goodsName"
       align="center"
       label="商品名称"
+       width="200"
       >
     </el-table-column>
     <el-table-column
@@ -55,12 +56,6 @@
       align="center"
       width="120">
     </el-table-column>
-    <!-- <el-table-column
-      prop="goodsInfo"
-      label="商品详细信息"
-      align="center"
-      width="120">
-    </el-table-column> -->
     <el-table-column
       prop="goodsType"
       label="商品类型"
@@ -77,7 +72,7 @@
       prop="goodsCreattime"
       label="上架时间"
       align="center"
-      width="120">
+      width="160">
     </el-table-column>
     <el-table-column
       prop="goodsLevel"
@@ -171,7 +166,9 @@
         this.$axios.get(url).then(function(response){
           that.pageTotalnum=response.data.data.total
           that.websiteTableData=response.data.data.list
-          //console.log(that.websiteTableData)
+          for (let index = 0; index <  that.websiteTableData.length; index++) {
+            that.websiteTableData[index].goodsCreattime=that.dateToDo(that.websiteTableData[index].goodsCreattime)
+          }
           let websiteTableDataLength=that.websiteTableData.length
           that.websiteTableDataloading=false
         }).catch(function (response){
@@ -181,6 +178,19 @@
             type: 'error'
           });
         });
+      },
+      dateToDo(shijianchuo){
+        function add0(num){
+          return num>9?num:'0'+num
+        }
+        var time = new Date(shijianchuo);
+        var y = time.getFullYear();
+        var m = time.getMonth()+1;
+        var d = time.getDate();
+        var h = time.getHours();
+        var mm = time.getMinutes();
+        var s = time.getSeconds();
+        return y+'-'+add0(m)+'-'+add0(d)+' '+add0(h)+':'+add0(mm)
       },
       //页码改变
       handleCurrentChange(num){
@@ -200,12 +210,12 @@
       //删除资讯
       deleteWebsiteTableData(articleId){
         var that=this
-        that.$confirm('此操作将删除该条资讯,且无法恢复, 是否继续?', '提示', {
+        that.$confirm('此操作将删除该商品,且无法恢复, 是否继续?', '提示', {
           cancelButtonText: '取消',
           confirmButtonText: '确定',
           type: 'warning'
         }).then(() => {
-          let url=that.baseUrl + "/manager/article/delete.do"+"?articleId="+articleId
+          let url=that.baseUrl + "/goods/goods_delete.do"+"?id="+articleId
           that.$axios.get(url).then(function(response){
             that.$message({
               message: response.data.msg,

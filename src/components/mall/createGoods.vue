@@ -15,11 +15,11 @@
         <div style="padding:20px;">  
             <div style="margin-top:20px;text-align: left;">
               <span class="inforImgLabel"><span style="color:#F00;padding:1px 2px;">*</span>商品封面：</span> 
-              <img :src="uploadImgSrc" width="150" height="80" alt="">
+              <img :src="uploadImgSrc" width="140" height="200" alt="">
               <input type="file" style="display:none" id="change" accept="image" @change="change">  
               <label for="change" class="imgInputLabel">更改图片</label>  
             </div> 
-            <p style="color:#999;text-align:left;text-indent:80px;margin-top:10px;font-size:16px;">注意:文件大小限制<span style="color:#000;font-size:14px;">300kb</span>,尺寸为<span style="color:#000;font-size:14px;">750*400</span>像素最佳</p>   
+            <p style="color:#999;text-align:left;text-indent:80px;margin-top:10px;font-size:16px;">注意:文件大小限制<span style="color:#000;font-size:14px;">300kb</span>,尺寸为<span style="color:#000;font-size:14px;">280*400</span>像素最佳</p>   
         </div> 
         <div class="container" v-show="cropperStatus">  
             <div style="width: 800px;height: 500px;overflow:hidden;margin-left:100px;">  
@@ -243,14 +243,16 @@
           var image = new Image();
           image.src= imgUrlBase64;
           image.onload=function(){
+            console.log(imgUrlBase64)
                let width=image.width
                let height=image.height
-               if(width==750&&height==400){
-                  that.postImg(imgUrlBase64.slice(23,))
+               if(width==280&&height==400){
+                 let flagData=imgUrlBase64.split(',')
+                  that.postImg(flagData[1])
                   that.uploadLoading=true
                }else{
                   that.$message({
-                      message: '图片必须为750*400像素',
+                      message: '图片必须为280*400像素',
                       type: 'error'
                   });
                   // that.cropperStatus=true
@@ -291,6 +293,7 @@
       createNewsFun(){
         var that=this
         this.$refs.createNewsform.validate((valid) => {
+          console.log(valid,that.uploadImgSrc)
           if(valid&&that.uploadImgSrc!='') {
             that.setLoader()
             let url=that.baseUrl+'/goods/goods_add.do'
@@ -302,8 +305,8 @@
               successMessage='添加商品成功'
               errorMessage='添加商品失败'
             }else{
-              url=that.baseUrl+'/manager/article/update.do'
-              addNews.append('id',that.websiteNewsId);
+              url=that.baseUrl+'/goods/goods_modify.do'
+              addNews.append('id',that.$route.params.id);
               successMessage='修改商品信息成功'
               errorMessage='修改商品信息失败'
             }
@@ -338,7 +341,7 @@
                 });
             })
           } else {
-              that.$message.error('请添加封面图片');
+              that.$message.error('有字段为空');
               return false;
           }
         });

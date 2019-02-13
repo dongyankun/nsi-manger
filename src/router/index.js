@@ -16,6 +16,8 @@ import member from '@/components/website/member'
 import visAct from '@/components/website/visAct'
 import goods from '@/components/mall/goods'
 import createGoods from '@/components/mall/createGoods.vue'
+import bill from '@/components/mall/bill.vue'
+import mallAdvert from '@/components/mall/goodsIndex.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -79,6 +81,12 @@ export default new Router({
 		  },{
 			path: '/mall/creategoods/:id', 
 	 　　　 component: createGoods,
+		  },{
+			path: '/mall/bill', 
+	 　　　 component: bill,
+		  },{
+			path: '/mall/advert', 
+	 　　　 component: mallAdvert,
 		  }
 	　]
     },{

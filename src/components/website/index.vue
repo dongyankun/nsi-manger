@@ -109,10 +109,11 @@
         this.$axios.get(url).then(function(response){
           that.pageTotalnum=response.data.data.total
           that.websiteTableData=response.data.data.list
-          //console.log(that.websiteTableData)
+          console.log(that.websiteTableData)
           let websiteTableDataLength=that.websiteTableData.length
           let flagNum=0
           function RefreshStatistics(){
+              
               let url=that.baseUrl + "/manager/article/RefreshStatistics.do"+"?articleId="+that.websiteTableData[flagNum].id
               that.$axios.get(url).then(function(response){
                 that.websiteTableData[flagNum].articleReader=response.data.msg
@@ -128,7 +129,10 @@
                 });
               });
           }
-          RefreshStatistics()
+          if(that.websiteTableData.length>0){
+            RefreshStatistics()
+          }
+          
           that.websiteTableDataloading=false
         }).catch(function (response){
           that.websiteTableDataloading=false
