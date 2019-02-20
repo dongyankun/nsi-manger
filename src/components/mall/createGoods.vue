@@ -227,9 +227,9 @@
           });
           return false;
         }
-        if (size > 307200||size < 51200) {
+        if (size > 307200) {
           that.$message({
-              message: '请选择50kb-300kb大小的图片！',
+              message: '请选择300kb以下的图片！',
               type: 'error'
           });
           return false;
@@ -271,7 +271,7 @@
         if(imgurl){this.uploadImgSrc=imgurl}
         var formData =new URLSearchParams();
         formData.append('strImage', this.uploadImgSrc);
-        formData.append("type", 'nsi-official/article/');
+        formData.append("type", 'nsi-shop/goods-info/');
         let url=that.baseUrl+'/manager/talent/get_base64_image.do'
         that.$axios.post(url,formData).then(resp => {
             that.uploadImgSrc=resp.data.data.url

@@ -9,11 +9,17 @@
     v-loading="websiteTableDataloading"
     class="websiteTable">
     <el-table-column
+      prop="goodsName2"
+      align="center"
+      label="类型">
+    </el-table-column>
+    <el-table-column
       prop="goodsIndex"
       align="center"
       label="编号"
       width="100">
     </el-table-column>
+    
      <el-table-column
       prop="goodsName"
       align="center"
@@ -50,7 +56,7 @@
       align="center"
       width="100">
       <template slot-scope="scope">
-        <el-button @click.prevent="edit(scope.row.goodsIndex)" type="text" size="small">编辑</el-button>
+        <el-button @click.prevent="edit(scope.row.goodsIndex,scope.row.content01)" type="text" size="small">编辑</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -110,37 +116,61 @@
         });
       },
       //获取表格数据
-      getWebsiteTable(){
+      getWebsiteTable(type){
         var that=this
         let url=this.baseUrl + "/goods/Get_Home_Config.do"
         var formData =new URLSearchParams();
-        formData.append('type', 'ShopHome');
-        this.$axios.post(url,formData).then(function(response){
-          console.log(response)
-          that.websiteTableData=response.data.data.goodList
-          for (let index = 0; index < response.data.data.configureList.length; index++) {
-            that.websiteTableData[index].goodsIndex=response.data.data.configureList[index].id
-          }
-          that.websiteTableDataloading=false
-        }).catch(function (response){
-          that.websiteTableDataloading=false
-          that.$message({
-            message: '数据请求失败',
-            type: 'error'
-          });
-        });
+        formData.append('type', type);
+        return new Promise(function(resolve,reject){
+            that.$axios.post(url,formData).then(function(response){
+              resolve(response)
+              // console.log(response)
+              // that.websiteTableData=response.data.data.goodList
+              // for (let index = 0; index < response.data.data.configureList.length; index++) {
+              //   that.websiteTableData[index].goodsIndex=response.data.data.configureList[index].id
+              // }
+              // that.websiteTableDataloading=false
+            }).catch(function (response){
+              reject(response)
+            });
+          })
       },
       //编辑资讯
-      edit(newsId){
+      edit(newsId,content01){
         let that=this
         this.goodsIndex=newsId
+        this.goodsId=content01
         this.puchaDrag=true
       },
 
     },
     created(){
-      //初始化表格数据
-      this.getWebsiteTable()
+      let that=this
+      Promise.all([that.getWebsiteTable('ShopHomeTop'),that.getWebsiteTable('ShopHomeSale'),that.getWebsiteTable('ShopHomeRecommend')]).then(function(arr){
+        
+        let flagArr=[]
+        let flagArr2=[]
+        arr.forEach(function(item){
+          console.log(item)
+          flagArr2=flagArr2.concat(item.data.data.goodList)
+          flagArr=flagArr.concat(item.data.data.configureList)
+        })
+        that.websiteTableData=flagArr2
+        for (let index = 0; index < flagArr.length; index++) {
+          that.websiteTableData[index].goodsIndex=flagArr[index].id
+          that.websiteTableData[index].content01=flagArr[index].content01
+          if (flagArr[index].type=='ShopHomeTop') {
+            that.websiteTableData[index].goodsName2='最受欢迎'
+          }else if(flagArr[index].type=='ShopHomeRecommend'){
+            that.websiteTableData[index].goodsName2='主编推荐'
+          }else if(flagArr[index].type=='ShopHomeSale'){
+            that.websiteTableData[index].goodsName2='限时特价'
+          }
+        }
+        that.websiteTableDataloading=false
+      },function(){
+        console.log('至少有一个失败了')
+      })
     }
   }
 </script>
