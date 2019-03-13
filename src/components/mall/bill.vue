@@ -33,9 +33,9 @@
   <el-table
     :data="websiteTableData"
     border
-    stripe
     v-loading="websiteTableDataloading"
     :max-height="windowHeight"
+    :row-class-name="tableRowClassName">
     class="websiteTable">
     <el-table-column
       prop="orderNo"
@@ -50,17 +50,26 @@
       width="120">
     </el-table-column>
     <el-table-column
+      prop="productType"
+      label="类型"
+      align="center"
+      width="120">
+    </el-table-column>
+    <el-table-column
       prop="total_price"
       label="总价格"
       align="center"
       width="120">
     </el-table-column>
     <el-table-column
-      prop="product.goodsName"
       align="center"
       label="购买商品"
       width="180"
       >
+      <template slot-scope="scope">
+            <el-button type="text" @click="getorderNoData(scope.row.goodsId)" size="small" style="color:#f56c6c" v-if="scope.row.productType=='购物车'">{{scope.row.goodsId}}</el-button>
+            <div v-if="scope.row.productType!='购物车'">{{scope.row.product.goodsName}}</div>
+      </template>
     </el-table-column>
     <el-table-column
       prop="quantity"
@@ -81,7 +90,12 @@
       align="center"
       width="120">
     </el-table-column>
-    
+    <el-table-column
+      prop="wechatId"
+      label="购买人wechatId"
+      align="center"
+      width="300">
+    </el-table-column>
     <el-table-column
       label="邮寄地址"
       align="center"
@@ -107,7 +121,12 @@
       align="center"
       width="120">
     </el-table-column>
-
+    <el-table-column
+      prop="createTime"
+      label="创建时间"
+      align="center"
+      width="200">
+    </el-table-column>
     <el-table-column
       fixed="right"
       label="操作"
@@ -138,12 +157,22 @@
       :visible.sync="puchaDrag"
       width="50%">
       <el-form label-width="140px" class="updateCardForm">
-        <el-form-item label="中通物流单号">
+        <el-form-item style="display:flex;" label="选择物流">
+          <el-select style="margin-left:-140px;z-index:99999999;" v-model="shipping_codeName" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="物流单号">
           <el-input v-model="shipping_code" type="text"></el-input>
-          <div style="font-size:12px;text-align:left;color:#F00;">*默认为中通物流</div>
+          <div style="font-size:12px;text-align:left;color:#999;">*物流单号不允许有_子符,当前拼接字符为:{{shipping_codeName}}{{shipping_code}}</div>
         </el-form-item>
         <el-form-item style="display:flex;" v-show="fahuoOrbianji" label="状态">
-          <el-select style="margin-left:-140px;z-index:99999999;" v-model="updatebillstatusValue" placeholder="请选择1">
+          <el-select style="margin-left:-140px;z-index:99999999;" v-model="updatebillstatusValue" placeholder="请选择">
                 <el-option
                 v-for="item2 in billstatus"
                 :key="item2.value"
@@ -163,21 +192,56 @@
           <el-button @click="puchaDrag=false">取 消</el-button>
           <el-button type="primary" @click="updateNowCardDatas">确认</el-button>
       </div>
-    </el-dialog>
-    <el-dialog
-      title="物流信息信息"
-      :modal-append-to-body="false"
-      :visible.sync="wuliuypuchaDrag"
-      width="50%">
-      <div>
-        <el-steps direction="vertical" :active="buzhouData.length" :space="60">
-            <el-step v-for="item in buzhouData" :key="item.acceptTime" :title="item.acceptTime" :description="item.acceptStation"></el-step>
-        </el-steps>
-      </div>
-      <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="wuliuypuchaDrag=false">确认</el-button>
-      </div>
-    </el-dialog>
+  </el-dialog>
+  <el-dialog
+    title="物流信息信息"
+    :modal-append-to-body="false"
+    :visible.sync="wuliuypuchaDrag"
+    width="50%">
+    <div>
+      <el-steps direction="vertical" :active="buzhouData.length" :space="60">
+          <el-step v-for="item in buzhouData" :key="item.acceptTime" :title="item.acceptTime" :description="item.acceptStation"></el-step>
+      </el-steps>
+    </div>
+    <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="wuliuypuchaDrag=false">确认</el-button>
+    </div>
+  </el-dialog>
+  <el-dialog
+    title="购物车信息"
+    :modal-append-to-body="false"
+    :visible.sync="buyCar"
+    width="50%">
+      <el-table
+        :data="buycarData"
+        border
+        stripe
+        v-loading="websiteTableDataloading"
+        :max-height="windowHeight"
+        class="websiteTable">
+        <el-table-column
+          prop="goodsName"
+          align="center"
+          label="商品名称"
+          width="300">
+        </el-table-column>
+        <el-table-column
+          prop="goodsNum"
+          label="商品数量"
+          align="center"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="goodsPrice"
+          label="价格"
+          align="center"
+          width="120">
+        </el-table-column> 
+      </el-table>
+    <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="buyCar=false">确认</el-button>
+    </div>
+  </el-dialog>
 </div>
   
 </template>
@@ -187,6 +251,7 @@
     data() {
       return {
         websiteTableData: [],//表格数据
+        buycarData:[],
         pageTotalnum:0,//数据总数
         pageNum:1,//页码
         pageSize:10,//默认每页数据量
@@ -224,23 +289,59 @@
         productType:[{
           value: '',
           label: '全部'
+        },{
+          value: '书店',
+          label: '书店'
+        },{
+          value: '课程',
+          label: '课程'
         }],
         productTypeValue:'',
         fahuoOrbianji:true,
         billId:'',
         wuliuypuchaDrag:false,
+        buyCar:false,
         buzhouData:'',
         buzhouDataLength:9,
+        shipping_codeName:'ZTO_',
+        options: [{
+          value: 'ZTO_',
+          label: '中通'
+        },{
+          value: 'SF_',
+          label: '顺丰'
+        },{
+          value: 'JD_',
+          label: '京东'
+        }, {
+          value: 'STO_',
+          label: '申通'
+        }, {
+          value: 'YTO_',
+          label: '圆通'
+        }, {
+          value: 'YZPY_',
+          label: '邮政快递包裹'
+        }]
       }
     },
     methods:{
         billstatusChange(data1){
+          this.pageNum=1
           if(data1==4||data1==5){
             this.billstatusValue2=true
           }else{
             this.billstatusValue2=false
           }
             this.getWebsiteTable()
+        },
+        tableRowClassName({row, rowIndex}) {
+          if (row.statusDesc==='已付款') {
+            return 'firstrow';
+          } else if (row.statusDesc==='已发货') {
+            return 'secondrow';
+          }
+          return '';
         },
         wuliuDan(rowData){
             let that=this
@@ -279,7 +380,11 @@
               }else{
                  that.websiteTableData[index].receivearea=''
               }
-              
+              that.websiteTableData[index].createTime=that.changeDate(that.websiteTableData[index].createTime)
+              console.log(that.websiteTableData[index].shippingCode)
+              if(!that.websiteTableData[index].shippingCode){
+                that.websiteTableData[index].shippingCode=''
+              }
             }
             
             console.log(that.websiteTableData)
@@ -294,6 +399,16 @@
           });
         });
       },
+      changeDate(index02){
+          var date = new Date(index02);
+          let Y = date.getFullYear() + '-';
+          let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+          let D = date.getDate() + ' ';
+          let h = date.getHours() + ':';
+          let m = date.getMinutes() + ':';
+          let s = date.getSeconds();
+          return Y+M+D+h+m+s
+      },
       //页码改变
       handleCurrentChange(num){
         this.pageNum=num
@@ -307,13 +422,16 @@
       //编辑资讯
       edit(billRow,data2){
         this.puchaDrag=true
-
         console.log(billRow)
         this.updatebillstatusValue=billRow.status
         this.buy_message=billRow.buyerMessage
         this.product_type=billRow.productType
         this.shipping_code=billRow.shippingCode
         this.billId=billRow.orderNo
+        if(this.shipping_code.indexOf('_')>0){
+          let flagarr=this.shipping_code.split('_')
+          this.shipping_code=flagarr[1]
+        }
         if(data2=='fahuo'){
           this.fahuoOrbianji=false
           this.updatebillstatusValue=4
@@ -321,6 +439,23 @@
           this.fahuoOrbianji=true
         }
         
+      },
+      //获取购物车订单信息
+      getorderNoData(orderNo){
+        let that=this
+        that.buyCar=true
+        let url=this.baseUrl + "/ShopCart/cartDetail.do"
+        let addNews=new URLSearchParams();
+        addNews.append('cartId',orderNo);
+        that.$axios.post(url,addNews).then(function(response){
+          that.buycarData=response.data.data
+          that.buyCar=true
+        }).catch(function (response){
+          that.$message({
+            message: '数据请求失败',
+            type: 'error'
+          });
+        });
       },
       //删除资讯
       deleteWebsiteTableData(articleId){
@@ -352,13 +487,20 @@
       },
       updateNowCardDatas(){
         var that=this
+        if(this.shipping_code.indexOf('_')>-1){
+          that.$message({
+            message: '物流单号有不规范字符_,请核对物流单号',
+            type: 'error'
+          });
+          return
+        }
         let url=this.baseUrl + "/manager/order/modify.do"
         let addNews=new URLSearchParams();
         addNews.append('orderNo',that.billId);
         addNews.append('status',that.updatebillstatusValue);
         addNews.append('buyerMessage',that.buy_message);
         addNews.append('productType',that.product_type);
-        addNews.append('shippingCode',that.shipping_code);
+        addNews.append('shippingCode',that.shipping_codeName+that.shipping_code);
         this.$axios.post(url,addNews).then(function(response){
           that.puchaDrag=false
           that.getWebsiteTable()
@@ -397,6 +539,13 @@
   .el-select-dropdown{
       z-index: 99999999 !important;
       margin-left: 0;
+  }
+  .el-table .firstrow {
+    background: #CCFF99;
+  }
+
+  .el-table .secondrow {
+    background: #99CCCC;
   }
   
 </style>

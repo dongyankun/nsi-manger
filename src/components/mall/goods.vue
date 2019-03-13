@@ -33,6 +33,18 @@
       >
     </el-table-column>
     <el-table-column
+      prop="goodsPrice"
+      label="价格"
+      align="center"
+      width="120">
+    </el-table-column>
+    <el-table-column
+      prop="goodsState"
+      label="状态"
+      align="center"
+      width="120">
+    </el-table-column>
+    <el-table-column
       prop="goodsAuthor"
       label="作者"
       align="center"
@@ -92,12 +104,7 @@
       align="center"
       width="120">
     </el-table-column>
-    <el-table-column
-      prop="goodsState"
-      label="状态"
-      align="center"
-      width="120">
-    </el-table-column>
+    
     <el-table-column
       prop="goodsSales"
       label="销量"
@@ -135,7 +142,7 @@
     background
     layout="total, sizes, prev, pager, next, jumper"
     :page-sizes="[10,20,30,40,50]"
-    :page-size="100"
+    :page-size="20"
     :total="pageTotalnum">
   </el-pagination>
 </div>
@@ -149,7 +156,7 @@
         websiteTableData: [],//表格数据
         pageTotalnum:0,//数据总数
         pageNum:1,//页码
-        pageSize:10,//默认每页数据量
+        pageSize:20,//默认每页数据量
         typeIndex:1,//序号开始
         keyword:'',//搜索
         websiteTableDataloading:true,//表格数据展示

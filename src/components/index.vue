@@ -4,8 +4,9 @@
     <el-header>
       <el-row>
         <el-col :span="12" class="headerLeft">
-          <div class="nsiLog">
-            NSI WEBSITE
+          <div style="display:flex;align-items:center;" class="nsiLog">
+            <img src="./../assets/images/logo.png" height="40" width="40" alt="">
+            <span>新学说官网</span>
           </div>
           <span class="nsiMenuBtn" @click="isCollapse">☰</span>   
         </el-col>

@@ -6,13 +6,13 @@
         <div class="outIconfont">
             <span class="iconfont icon-xingmingyonghumingnicheng"></span> 
             <el-form-item label="" prop="userName">
-              <el-input @keydown.enter.native="userLogin" v-model="form.userName" placeholder="请输入用户名"></el-input>
+              <el-input auto-complete="on" @keydown.enter.native="userLogin" v-model="form.userName" placeholder="请输入用户名"></el-input>
             </el-form-item>
           </div>
         <div class="outIconfont">
             <span class="iconfont icon-07"></span>
             <el-form-item label="" prop="passWord">
-              <el-input @keydown.enter.native="userLogin" v-model="form.passWord" onfocus="this.type='password'" placeholder="请输入密码" autocomplete="off"></el-input>
+              <el-input auto-complete="on" @keydown.enter.native="userLogin" v-model="form.passWord" type="password" placeholder="请输入密码"></el-input>
             </el-form-item>
           </div>
         <el-button class="loginBtn" @click="userLogin" type="primary">登录</el-button>
@@ -190,10 +190,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  :-webkit-autofill {
-   -webkit-text-fill-color: #fff !important;
-   transition: background-color 50000s ease-in-out 0s;
-  }
+  
   *{
     margin: 0;
     padding: 0;
@@ -231,6 +228,8 @@ export default {
           background:#495060;
           color:#fff;
           text-indent:20px;
+          -webkit-box-shadow: 0 0 0px 1000px #495060 inset !important;
+          -webkit-text-fill-color: #eee !important;
         }
         .icon-xingmingyonghumingnicheng,.icon-07{
           position:absolute;

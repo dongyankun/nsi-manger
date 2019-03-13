@@ -10,6 +10,8 @@ import  './assets/icon/iconfont.css'
 //引入复制文本插件
 import VueClipboard from 'vue-clipboard2'
 //引入vuex
+
+import './assets/icons/index.js'
 import Vuex from 'vuex'
 import store from './vuex/store'
 //路由
@@ -22,8 +24,8 @@ var flagNum=Math.random()
 // if(flagNum>0.5){
 // 	Vue.prototype.baseUrl = 'http://192.168.0.159:8080/nsi-1.0'
 // }else{
-	//Vue.prototype.baseUrl = 'http://192.168.0.26:8080/nsi-1.0'
-	Vue.prototype.baseUrl = 'https://data.xinxueshuo.cn/nsi-1.0'
+	Vue.prototype.baseUrl = 'http://192.168.0.33:8080/nsi-1.0'
+	//Vue.prototype.baseUrl = 'https://data.xinxueshuo.cn/nsi-1.0'
 //}
 Vue.config.productionTip = false
 if(!localStorage["userName"]){
