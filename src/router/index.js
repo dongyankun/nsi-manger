@@ -18,6 +18,7 @@ import goods from '@/components/mall/goods'
 import createGoods from '@/components/mall/createGoods.vue'
 import bill from '@/components/mall/bill.vue'
 import mallAdvert from '@/components/mall/goodsIndex.vue'
+import invoice from '@/layout/table.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -87,6 +88,9 @@ export default new Router({
 		  },{
 			path: '/mall/advert', 
 	 　　　 component: mallAdvert,
+		  },{
+			path: '/mall/invoice', 
+	 　　　 component: invoice,
 		  }
 	　]
     },{
