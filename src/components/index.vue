@@ -90,6 +90,7 @@
             
               <el-menu-item index="/distribution/index">分销管理</el-menu-item>
               <el-menu-item index="/distribution/bill">财务管理</el-menu-item>
+              <el-menu-item index="/distribution/caiwu">财务对账</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           

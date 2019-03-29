@@ -19,6 +19,7 @@ import createGoods from '@/components/mall/createGoods.vue'
 import bill from '@/components/mall/bill.vue'
 import mallAdvert from '@/components/mall/goodsIndex.vue'
 import invoice from '@/layout/table.vue'
+import caiwu from '@/components/distribution/caiwu.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -91,6 +92,9 @@ export default new Router({
 		  },{
 			path: '/mall/invoice', 
 	 　　　 component: invoice,
+		  },{
+			path: '/distribution/caiwu', 
+	 　　　 component: caiwu,
 		  }
 	　]
     },{

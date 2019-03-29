@@ -24,8 +24,8 @@ var flagNum=Math.random()
 // if(flagNum>0.5){
 // 	Vue.prototype.baseUrl = 'http://192.168.0.159:8080/nsi-1.0'
 // }else{
-	Vue.prototype.baseUrl = 'http://192.168.0.13:8080/nsi-1.0'
-	//Vue.prototype.baseUrl = 'https://data.xinxueshuo.cn/nsi-1.0'
+	//Vue.prototype.baseUrl = 'http://192.168.0.20:8080/nsi-1.0'
+	Vue.prototype.baseUrl = 'https://data.xinxueshuo.cn/nsi-1.0'
 //}
 Vue.config.productionTip = false
 if(!localStorage["userName"]){

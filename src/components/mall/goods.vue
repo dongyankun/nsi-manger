@@ -2,14 +2,28 @@
 <div>
   <!-- 头部按钮 -->
   <div class="headerBtn">
-    <div class="headerBtnLeft">
-      <el-button @click="createNews" type="primary">添加商品</el-button>
+    
+    <div>
+      <el-form label-width="50px" class="updateCardForm">
+          <el-form-item label="状态:">
+              <el-select @change="billstatusChange" v-model="billstatusValue" placeholder="请选择">
+                  <el-option
+                  v-for="item in billstatus"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                  </el-option>
+              </el-select>
+          </el-form-item>
+        </el-form>
     </div>
     <div class="headerBtnRight">
       <el-input v-model="keyword" placeholder="请输入关键字搜索"></el-input>
       <el-button type="success" class="selectBtn" @click="getWebsiteTable"><i class="el-icon-search"></i><span>查询</span></el-button>
     </div>
-    
+    <div class="headerBtnLeft">
+      <el-button @click="createNews" type="primary">添加商品</el-button>
+    </div>
   </div>
   <!-- 表格 -->
   <el-table
@@ -161,15 +175,30 @@
         keyword:'',//搜索
         websiteTableDataloading:true,//表格数据展示
         warnClass:'warnClass',
-        commonCalss:''
+        commonCalss:'',
+        billstatusValue:'',
+        billstatus:[{
+          value: '',
+          label: '全部'
+        },{
+          value: '上架',
+          label: '上架'
+        }, {
+          value: '下架',
+          label: '下架'
+        }],
       }
     },
     methods:{
+      billstatusChange(data1){
+          this.pageNum=1
+            this.getWebsiteTable()
+        },
       //获取表格数据
       getWebsiteTable(){
         var that=this
         that.websiteTableDataloading=true
-        let url=this.baseUrl + "/goods/goods_list.do"+"?type=新学说书籍&state=上架&pageNum="+this.pageNum+"&pageSize="+this.pageSize+"&searchKey="+this.keyword
+        let url=this.baseUrl + "/goods/goods_list.do"+"?type=新学说书籍&state="+that.billstatusValue+"&pageNum="+this.pageNum+"&pageSize="+this.pageSize+"&searchKey="+this.keyword
         this.$axios.get(url).then(function(response){
           that.pageTotalnum=response.data.data.total
           that.websiteTableData=response.data.data.list
@@ -259,8 +288,15 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped >
+  .headerBtn{
+    display:flex;
+    justify-content:start;
+  }
   .warnClass{
     color:#F00;
+  }
+  .headerBtnLeft{
+    margin-left: 30px;
   }
 </style>
