@@ -67,7 +67,7 @@
       width="180"
       >
       <template slot-scope="scope">
-            <el-button type="text" @click="getorderNoData(scope.row.goodsId)" size="small" style="color:#f56c6c" v-if="scope.row.productType=='购物车'">{{scope.row.goodsId}}</el-button>
+            <el-button type="text" @click="getorderNoData(scope.row.goodsId)" size="small" style="color:#f56c6c" v-if="scope.row.productType=='购物车'">{{scope.row.productType}}</el-button>
             <div v-if="scope.row.productType!='购物车'">{{scope.row.product.goodsName}}</div>
       </template>
     </el-table-column>

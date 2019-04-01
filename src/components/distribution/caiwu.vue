@@ -25,6 +25,10 @@
         align="center"
         label="支付类型"
         >
+        <template slot-scope="scope">
+            <el-button type="text" @click="getorderNoData(scope.row.product.id)" size="small" style="color:#f56c6c" v-if="scope.row.productType=='购物车'">{{scope.row.productType}}</el-button>
+            <div v-if="scope.row.productType!='购物车'">{{scope.row.product.goodsName}}</div>
+        </template>
       </el-table-column>
       <el-table-column
         prop="product.goodsName"
@@ -54,6 +58,41 @@
       :page-size="30"
       :total="pageTotalnum">
     </el-pagination>
+    <el-dialog
+    title="购物车信息"
+    :modal-append-to-body="false"
+    :visible.sync="buyCar"
+    width="50%">
+      <el-table
+        :data="buycarData"
+        border
+        stripe
+        v-loading="websiteTableDataloading"
+        :max-height="windowHeight"
+        class="websiteTable">
+        <el-table-column
+          prop="goodsName"
+          align="center"
+          label="商品名称"
+          width="300">
+        </el-table-column>
+        <el-table-column
+          prop="goodsNum"
+          label="商品数量"
+          align="center"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="goodsPrice"
+          label="价格"
+          align="center"
+          width="120">
+        </el-table-column> 
+      </el-table>
+    <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="buyCar=false">确认</el-button>
+    </div>
+  </el-dialog>
   </div>
 </template>
 
@@ -69,9 +108,27 @@ export default {
       typeIndex:1,//序号开始
       keyword:'',//搜索
       distributionTableDataloading:true,//表格数据展示
+      buyCar:false,
     }
   },
   methods:{
+    //获取购物车订单信息
+      getorderNoData(orderNo){
+        let that=this
+        that.buyCar=true
+        let url=this.baseUrl + "/ShopCart/cartDetail.do"
+        let addNews=new URLSearchParams();
+        addNews.append('cartId',orderNo);
+        that.$axios.post(url,addNews).then(function(response){
+          that.buycarData=response.data.data
+          that.buyCar=true
+        }).catch(function (response){
+          that.$message({
+            message: '数据请求失败',
+            type: 'error'
+          });
+        });
+      },
       //页码改变
       handleCurrentChange(num){
         this.pageNum=num
