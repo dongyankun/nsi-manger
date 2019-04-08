@@ -56,7 +56,7 @@
       align="center"
       width="100">
       <template slot-scope="scope">
-        <el-button @click.prevent="edit(scope.row.goodsIndex,scope.row.content01)" type="text" size="small">编辑</el-button>
+        <el-button @click.prevent="edit(scope.row.goodsIndex,scope.row.content01,scope.row.type)" type="text" size="small">编辑</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -91,6 +91,7 @@
         websiteTableDataloading:true,//表格数据展示
         puchaDrag:false,
         fileList:[],
+        goodsType:''
       }
     },
     methods:{
@@ -100,6 +101,7 @@
         var formData =new URLSearchParams();
         formData.append('id', that.goodsIndex);
         formData.append('content01', that.goodsId);
+        formData.append('type', that.goodsType);
         this.$axios.post(url,formData).then(function(response){
           that.$message({
             message: '修改成功',
@@ -136,10 +138,11 @@
           })
       },
       //编辑资讯
-      edit(newsId,content01){
+      edit(newsId,content01,type){
         let that=this
         this.goodsIndex=newsId
         this.goodsId=content01
+        this.goodsType=type
         this.puchaDrag=true
       },
 
@@ -159,6 +162,7 @@
         for (let index = 0; index < flagArr.length; index++) {
           that.websiteTableData[index].goodsIndex=flagArr[index].id
           that.websiteTableData[index].content01=flagArr[index].content01
+          that.websiteTableData[index].type=flagArr[index].type
           if (flagArr[index].type=='ShopHomeTop') {
             that.websiteTableData[index].goodsName2='最受欢迎'
           }else if(flagArr[index].type=='ShopHomeRecommend'){

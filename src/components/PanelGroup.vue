@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="8" :sm="8" :lg="8" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
@@ -22,7 +22,7 @@
         
       </div>
     </el-col>
-    <el-col :xs="8" :sm="8" :lg="8" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
@@ -43,7 +43,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="8" :sm="8" :lg="8" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="money" class-name="card-panel-icon" />
@@ -64,17 +64,27 @@
          </div>
       </div>
     </el-col>
-    <!-- <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+    <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
+      <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
+          <svg-icon icon-class="money" class-name="card-panel-icon" />
         </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">Shoppings</div>
-         
-        </div>
+        <div class="card-panelRight">
+          <div class="card-panel-description">
+            <div class="card-panel-text">营业额(年)</div>
+            <div class="card-panel-text">{{yeartotalPrice.totalPrice}}</div>
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">课程数(年)</div>
+            <div class="card-panel-text">{{yeartotalPrice.kechengNum}}</div>
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">书店数(年)</div>
+            <div class="card-panel-text">{{yeartotalPrice.shudianNum}}</div>
+          </div>
+         </div>
       </div>
-    </el-col> -->
+    </el-col>
   </el-row>
 </template>
 
@@ -85,7 +95,8 @@ export default {
     return{
       chartData:[],
       chartData1:[],
-      chartData2:[]
+      chartData2:[],
+      yeartotalPrice:{}
     }
   },
   methods: {
@@ -103,10 +114,13 @@ export default {
   },
   created(){
     let that=this
-    Promise.all([that.getChartData('/manager/index/get_month_list.do'),that.getChartData('/manager/index/get_week_list.do'),that.getChartData('/manager/index/get_today_list.do')]).then(function(arr){
+    Promise.all([that.getChartData('/manager/index/get_month_list.do'),that.getChartData('/manager/index/get_week_list.do'),that.getChartData('/manager/index/get_today_list.do'),that.getChartData('/manager/index/get_year_list.do')]).then(function(arr){
       that.chartData=arr[0]
       that.chartData1=arr[1]
       that.chartData2=arr[2]
+      that.yeartotalPrice.totalPrice=arr[3]['2019']
+      that.yeartotalPrice.kechengNum=arr[3]['课程']
+      that.yeartotalPrice.shudianNum=arr[3]['书店']
     },function(){
       console.log('至少有一个失败了')
     })
@@ -148,7 +162,7 @@ export default {
         background: #f4516c;
       }
       .icon-shopping {
-        background: #34bfa3
+        background: #40c9c6
       }
     }
     .icon-people {
@@ -181,10 +195,10 @@ export default {
       font-size: 48px;
     }
     .card-panel-description {
+      width: 33%;
       float: right;
       font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
+      margin: 26px 0;
       .card-panel-text {
         line-height: 18px;
         color: rgba(0, 0, 0, 0.45);

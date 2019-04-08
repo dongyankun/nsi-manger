@@ -10,7 +10,6 @@ import  './assets/icon/iconfont.css'
 //引入复制文本插件
 import VueClipboard from 'vue-clipboard2'
 //引入vuex
-
 import './assets/icons/index.js'
 import Vuex from 'vuex'
 import store from './vuex/store'
