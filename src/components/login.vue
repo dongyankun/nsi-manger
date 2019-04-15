@@ -15,19 +15,31 @@
               <el-input auto-complete="on" @keydown.enter.native="userLogin" v-model="form.passWord" type="password" placeholder="请输入密码"></el-input>
             </el-form-item>
           </div>
+        <div class="outIconfont">
+            <el-form-item label="">
+              <verify @getVerity="getVerityStatus"></verify>
+            </el-form-item>
+          </div>
         <el-button class="loginBtn" @click="userLogin" type="primary">登录</el-button>
         <span size="mini" style="margin:10px 0 0 20px;font-size:14px;float:left;color:#999;cursor:pointer;" @click="forgetPas">忘记密码</span>
     </el-form>
   </div>
 </template>
 <script>
+
+import verify from '../layout/verify.vue'
+
 export default {
   name: 'home',
+  components:{
+    verify
+  },
   data () {
     return {
       form:{
         userName:'',
-        passWord:''
+        passWord:'',
+        verifyStatus:false
       },
       rules: {
           userName: [
@@ -40,6 +52,9 @@ export default {
     }
   },
   methods:{
+    getVerityStatus(data){
+      this.verifyStatus=data
+    },
     userLogin(){
       let that=this
       this.$refs.form.validate((valid) => {
@@ -47,6 +62,13 @@ export default {
           if((that.form.userName.indexOf('xinxueshuo.cn')<0)||(that.form.userName.length<18)){
             that.$message({
               message: '权限不足,请联系技术人员',
+              type: 'error'
+            });
+            return
+          }
+          if(!this.verifyStatus){
+            that.$message({
+              message: '计算错误',
               type: 'error'
             });
             return

@@ -55,7 +55,11 @@ export default {
         });
    }
   },
+  beforeCreate(){
+    console.log('beforeCreate')
+  },
   created(){
+    console.log('created')
     this.minHeight=window.innerHeight-110+'px'
     this.getChartData()
   },
