@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import PanelGroup from './PanelGroup'
-import LineChart from './LineChart'
+import PanelGroup from '../../components/websiteIndex/PanelGroup'
+import LineChart from '../../components/websiteIndex/LineChart'
 
 export default {
   name: 'home',

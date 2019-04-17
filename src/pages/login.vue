@@ -27,7 +27,7 @@
 </template>
 <script>
 
-import verify from '../layout/verify.vue'
+import verify from '../components/login/verify'
 
 export default {
   name: 'home',
@@ -116,7 +116,6 @@ export default {
     },
     forgetPas(){
       window.open('http://data.xinxueshuo.cn/nsi/user/password.html','_blank')
-      //http://data.xinxueshuo.cn/nsi/user/password.html
     }
   },
   created(){

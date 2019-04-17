@@ -40,11 +40,11 @@
   position:absolute;
   right:0;
   width: 140px;
-  background: #fff;
+  background: #f1f1f1;
   height: 47px;
   line-height: 47px;
   z-index: 999;
-  font-size: 30px;
+  font-size: 24px;
   cursor: pointer;
   color:rgb(153, 51, 102);
 }
