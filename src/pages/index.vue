@@ -85,7 +85,7 @@
             </el-submenu>
             <el-submenu style="text-align:left;" index="/distribution">
               <template slot="title">
-                <i class="el-icon-printer"></i>
+               <i class="el-icon-sold-out"></i>
                 <span>支付管理</span>
               </template>
               <el-menu-item-group>
