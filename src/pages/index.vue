@@ -78,6 +78,7 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="/mall/advert">商城首页</el-menu-item>
+                <el-menu-item index="/mall/banner">首页banner</el-menu-item>
                 <el-menu-item index="/mall/goods">商品管理</el-menu-item>
                 <el-menu-item index="/mall/bill">订单管理</el-menu-item>
                 <el-menu-item index="/mall/invoice">发票管理</el-menu-item>

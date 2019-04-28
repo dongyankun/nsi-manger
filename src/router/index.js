@@ -20,6 +20,8 @@ import bill from '@/pages/mall/bill.vue'
 import mallAdvert from '@/pages/mall/goodsIndex.vue'
 import invoice from '@/pages/mall/invoice.vue'
 import caiwu from '@/pages/distribution/caiwu.vue'
+import billBanner from '@/pages/mall/banner.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -92,6 +94,9 @@ export default new Router({
 		  },{
 			path: '/mall/invoice', 
 	 　　　 component: invoice,
+		  },{
+			path: '/mall/banner', 
+	 　　　 component: billBanner,
 		  },{
 			path: '/distribution/caiwu', 
 	 　　　 component: caiwu,
