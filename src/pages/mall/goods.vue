@@ -296,7 +296,7 @@
         puchaDrag:false,
         shareObj:{
           img1Src:'https://nsi.oss-cn-zhangjiakou.aliyuncs.com/nsi-official/article/1552016958440.jpg',
-          img1SrcSizeX:860,
+          img1SrcSizeX:800,
           img1SrcSizeY:358,
           img2Src:'https://nsi.oss-cn-zhangjiakou.aliyuncs.com/nsi-official/article/1552016958440.jpg',
           img2SrcSizeX:10,
@@ -348,10 +348,10 @@
           that.context.font=that.shareObj.bookNameFontSize+"px Arial";
           that.context.fillStyle = that.shareObj.bookNameColor;
           that.context.fillText(that.shareObj.bookName, that.shareObj.bookNamePositionX,that.shareObj.bookNamePositionY);
-          var image = new Image();
-          let canvas = document.getElementById('myCanvas');
-          image.src = canvas.toDataURL("image/png");
-          console.log(image.src)
+          // var image = new Image();
+          // let canvas = document.getElementById('myCanvas');
+          // image.src = canvas.toDataURL("image/png");
+          // console.log(image.src)
         })
       },
       //绘制图片到canvas上
